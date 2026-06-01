@@ -138,7 +138,7 @@ class StatusJsonCopier:
             return
 
         # Filter out already completed files
-        remaining_files = [f for f in all_files if str(f) not in self.completed_files]
+        remaining_files = [f for f in all_files if str(f.relative_to(self.source)) not in self.completed_files]
 
         if not remaining_files:
             print(f"All {self.successful_count} files have already been copied!")
@@ -151,7 +151,7 @@ class StatusJsonCopier:
         # Process each file
         for idx, source_file in enumerate(remaining_files, 1):
             if self.copy_file(source_file):
-                self.completed_files.add(str(source_file))
+                self.completed_files.add(str(source_file.relative_to(self.source)))
                 self.successful_count += 1
                 self.files_copied_this_run += 1
                 self.save_progress()
